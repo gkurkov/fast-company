@@ -3,12 +3,13 @@ import User from './user'
 
 const Users = ( { users, ...rest} ) => { // почему надо так писать?
 
-let userArray = { ...rest} // почему надо так писать?
+let userArray = { ...users } // почему надо так писать?
 
-console.log('userArray', userArray)
-console.log(Object.keys(userArray).length)
+//console.log('userArray', userArray)
+//console.log(Object.keys(userArray).length)
+console.log('users', {...users})
 
-if (Object.keys(userArray).length > 0)
+if (Object.keys(users).length > 0)
 
 return (
         <table className='table'>
@@ -23,10 +24,13 @@ return (
             </tr>
         </thead>
 
-        {User(userArray)}
-
+        {users.map((item) =>  {
+           return <User user = {item} />
+        })}
+        
         </table>
-    )
+     )
+
 }
 
 export default Users

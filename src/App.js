@@ -22,8 +22,8 @@ function App() {
     return (
 
         <div>
-        {SearchStatus(users.length)}
-        {Users(users)}
+        <SearchStatus count={users.length}/>
+        <Users users={users}/>
         </div>
     )
 

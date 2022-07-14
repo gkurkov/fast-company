@@ -2,33 +2,37 @@ import React from "react";
 import Quality from './quality'
 import Bookmark from './bookmark'
 
-const User = (userArray) => {
-   
-    console.log('user', userArray)
-    
-    for (let itemKey in userArray){
-    console.log(itemKey, userArray[itemKey].name, userArray[itemKey]._id, userArray[itemKey].profession.name)
-    }
+const User = ({user, ...rest}) => {
 
-    for (let itemKey in userArray) {
+    // const handleDelete = (userID) => {
+    //     const newUsers = users.filter((u) => u.id !== userID)
+    //     setUsers(newUsers)
+    // }
+
+    const qualities = user.qualities
+    //let props = rest
+    console.log('QUALITIES', qualities)
+    console.log('props', rest)
 
     return  <tbody>
-                    <tr key={userArray[itemKey]._id}>
-                        <td>{userArray[itemKey].name}</td>
+                    <tr key={user._id}>
+                        <td>{user.name}</td>
                         <td>
-                        {/* {user.qualities.map((item) => (
-                            <span className={"badge m-1 bg-" + item.color} 
-                                  key={item._id}>
-                                        {item.name}
-                            </span>
-                            ))} */}
+
+                        {qualities.map((item) =>  {
+
+                            console.log('item.quality', item)
+                            
+                            return <Quality quality = {item} />
+                        })}
+     
                         </td>
-                        <td>{userArray[itemKey].profession.name}</td>
-                        <td>{userArray[itemKey].completedMeetings}</td>
-                        <td>{userArray[itemKey].rate}/5</td>
+                        <td>{user.profession.name}</td>
+                        <td>{user.completedMeetings}</td>
+                        <td>{user.rate}/5</td>
                         <td>
                             <button
-                                // onClick = { () => handleDelete(user._id) }
+                                // onClick = { () => handleDelete(props.user._id)}
                                 className="btn btn-danger"
                             >
                                 Delete
@@ -36,7 +40,6 @@ const User = (userArray) => {
                             </td>
                     </tr>
         </tbody>
-}
 }
 
 export default User 
