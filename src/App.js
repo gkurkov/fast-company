@@ -11,19 +11,22 @@ function App() {
 
 
     const handleDelete = (userID) => {
-        const newUsers = users.filter((u) => u.id !== userID)
+
+        console.log('userID', userID)
+        const newUsers = users.filter((u) => u._id !== userID)
+        console.log('newUsers', newUsers)
         setUsers(newUsers)
     }
 
     const handleToggleBookMark = (id) => {
-
+    console.log('id-toggle', id)
     }
     
     return (
 
         <div>
         <SearchStatus count={users.length}/>
-        <Users users={users}/>
+        <Users users={users} onDelete = {handleDelete} onToggleBookMark = {handleToggleBookMark} />
         </div>
     )
 

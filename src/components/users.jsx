@@ -3,11 +3,10 @@ import User from './user'
 
 const Users = ( { users, ...rest} ) => { // почему надо так писать?
 
-let userArray = { ...users } // почему надо так писать?
-
 //console.log('userArray', userArray)
 //console.log(Object.keys(userArray).length)
 console.log('users', {...users})
+console.log('users-rest', rest)
 
 if (Object.keys(users).length > 0)
 
@@ -20,12 +19,13 @@ return (
             <th scope='col'>Профеcсия</th>
             <th scope='col'>Встретился, раз</th>
             <th scope='col'>Оценка</th>
+            <th scope='col'>Избранное</th>
             <th scope='col'></th>
             </tr>
         </thead>
 
         {users.map((item) =>  {
-           return <User user = {item} />
+           return <User key={item._id} user = {item} onDelete={rest}/>
         })}
         
         </table>

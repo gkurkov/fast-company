@@ -8,9 +8,8 @@ const User = ({user, ...rest}) => {
     //     const newUsers = users.filter((u) => u.id !== userID)
     //     setUsers(newUsers)
     // }
-
-    const qualities = user.qualities
-    //let props = rest
+        const qualities = user.qualities
+    console.log('user-item', user)
     console.log('QUALITIES', qualities)
     console.log('props', rest)
 
@@ -31,13 +30,17 @@ const User = ({user, ...rest}) => {
                         <td>{user.completedMeetings}</td>
                         <td>{user.rate}/5</td>
                         <td>
+                        <Bookmark state = {user.bookmark}/>
+
+                        </td>
+                        <td>
                             <button
-                                // onClick = { () => handleDelete(props.user._id)}
-                                className="btn btn-danger"
+                                className="btn btn-danger" id={user._id}
+                                onClick = {() => rest.onDelete.onDelete(user._id)}
                             >
                                 Delete
                             </button>
-                            </td>
+                        </td>
                     </tr>
         </tbody>
 }

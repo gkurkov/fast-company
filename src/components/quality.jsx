@@ -3,7 +3,6 @@ import React from "react"
 const Quality = (item) => {
     
     console.log('quality', item)
-    console.log('qualiti - 2', item.quality.color)
 
             return  <span 
                         className={"badge m-1 bg-" + item.quality.color} 
