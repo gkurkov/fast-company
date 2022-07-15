@@ -5,32 +5,33 @@ import SearchStatus from "./components/searchStatus"
 
 
 function App() {
-
     const [users, setUsers] = useState(API.users.fetchAll())
-    console.log('App-users', users)
-
 
     const handleDelete = (userID) => {
-
-        console.log('userID', userID)
-        const newUsers = users.filter((u) => u._id !== userID)
-        console.log('newUsers', newUsers)
-        setUsers(newUsers)
+    const newUsers = users.filter((u) => u._id !== userID)
+    setUsers(newUsers)
     }
 
     const handleToggleBookMark = (id) => {
-    console.log('id-toggle', id)
+    const bookMarkToChange = users.findIndex((user => user._id === id))
+    const newUsers = [...users]
+
+    newUsers[bookMarkToChange].bookmark === true 
+    ? 
+    newUsers[bookMarkToChange].bookmark = false 
+    : 
+    newUsers[bookMarkToChange].bookmark = true
+    
+    setUsers(newUsers)
     }
     
     return (
-
-        <div>
-        <SearchStatus count={users.length}/>
-        <Users users={users} onDelete = {handleDelete} onToggleBookMark = {handleToggleBookMark} />
-        </div>
+    <div>
+    <SearchStatus count={users.length}/>
+    <Users users={users} onDelete = {handleDelete} onToggleBookMark = {handleToggleBookMark} />
+    </div>
     )
 
 }
-
 
 export default App

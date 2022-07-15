@@ -1,20 +1,16 @@
 import React from 'react'
 import User from './user'
 
-const Users = ( { users, ...rest} ) => { // почему надо так писать?
+const Users = ( {users, ...rest} ) => {
 
-//console.log('userArray', userArray)
-//console.log(Object.keys(userArray).length)
-console.log('users', {...users})
-console.log('users-rest', rest)
-
-if (Object.keys(users).length > 0)
+//if (Object.keys(users).length > 0)
 
 return (
         <table className='table'>
         <thead>
             <tr>
             <th scope='col'>Имя</th>
+            <th scope='col'>Профеcсия</th>
             <th scope='col'>Качества</th>
             <th scope='col'>Профеcсия</th>
             <th scope='col'>Встретился, раз</th>
@@ -25,7 +21,7 @@ return (
         </thead>
 
         {users.map((item) =>  {
-           return <User key={item._id} user = {item} onDelete={rest}/>
+           return <User key={item._id} user={item} props={rest}/>
         })}
         
         </table>
