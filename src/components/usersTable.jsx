@@ -53,6 +53,7 @@ const UserTable = ({
         //     <TableHeader {...{ onSort, selectedSort, columns }} />
         //     <TableBody {...{ columns, data: users }} />
         // </Table>
+
         <Table
             onSort={onSort}
             selectedSort={selectedSort}
