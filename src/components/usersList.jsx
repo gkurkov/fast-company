@@ -90,6 +90,8 @@ const UsersList = () => {
 
         const clearFilter = () => {
             setSelectedProf()
+            setSearchInput('')
+            setPlaceholder('Search...')
         }
 
         return (
