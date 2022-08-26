@@ -114,16 +114,18 @@ const UsersList = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
-
-                    <form>
-                        <input
-                            placeholder={placeholder}
-                            value={searchInput}
-                            onChange={handleSearchChange}
-                        />
-                        {/* <button type="submit">Отправить</button> */}
-                    </form>
-
+                    <div className="input-group">
+                        <form>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={placeholder}
+                                value={searchInput}
+                                onChange={handleSearchChange}
+                            />
+                            {/* <button type="submit">Отправить</button> */}
+                        </form>
+                    </div>
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}
