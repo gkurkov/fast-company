@@ -13,6 +13,11 @@ const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfession] = useState()
     const [selectedProf, setSelectedProf] = useState()
+
+    const [searchInput, setSearchInput] = useState('') //
+
+    const [placeholder, setPlaceholder] = useState('Search...')
+
     const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
 
     const [users, setUsers] = useState()
@@ -41,7 +46,7 @@ const UsersList = () => {
 
     useEffect(() => {
         setCurrentPage(1)
-    }, [selectedProf])
+    }, [selectedProf, searchInput]) //
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
@@ -49,10 +54,17 @@ const UsersList = () => {
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item)
+        setSearchInput('')
+        setPlaceholder('Search...')
     }
 
     const handleSort = (item) => {
         setSortBy(item)
+    }
+
+    const handleSearchChange = ({ target }) => {
+        setSearchInput(target.value)
+        setSelectedProf()
     }
 
     if (users) {
@@ -62,6 +74,8 @@ const UsersList = () => {
                       JSON.stringify(user.profession) ===
                       JSON.stringify(selectedProf)
               )
+            : searchInput
+            ? users.filter((user) => user.name.includes(searchInput))
             : users
 
         const count = filteredUsers.length
@@ -98,6 +112,16 @@ const UsersList = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+
+                    <form>
+                        <input
+                            placeholder={placeholder}
+                            value={searchInput}
+                            onChange={handleSearchChange}
+                        />
+                        {/* <button type="submit">Отправить</button> */}
+                    </form>
+
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}
