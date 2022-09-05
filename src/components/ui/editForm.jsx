@@ -31,10 +31,12 @@ const EditForm = () => {
             }))
             setQualities(qualitiesList)
         })
+        // api.qualities.fetchAll().then((data) => setQualities(data))
         api.users.getById(userId).then((data) => setUser(data))
     }, [])
 
     const handleChange = (target) => {
+        // console.log('target', target)
         setUser((prevState) => ({
             ...prevState,
             [target.name]: target.value
@@ -44,20 +46,29 @@ const EditForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const NewUserQualities = Object.keys(user.qualities).map(
-            (optionName) => ({
-                name: user.qualities[optionName].label,
-                _id: user.qualities[optionName].value,
-                color: user.qualities[optionName].color
-            })
-        )
+        // console.log('if user->user.qualities', user.qualities)
+        let NewUserQualities = user.qualities
+        if (user.qualities[0].label) {
+            NewUserQualities = Object.keys(user.qualities).map(
+                (optionName) => ({
+                    name: user.qualities[optionName].label,
+                    _id: user.qualities[optionName].value,
+                    color: user.qualities[optionName].color
+                })
+            )
+        }
 
         // console.log('newQualities', NewUserQualities)
+
+        // if (user.qualities !== user.init_qualities) {
+        user.qualities = NewUserQualities
+        // } else {
+        //     user.qualities = user.init_qualities
+        // }
 
         const newProfession = professions.filter(
             (prof) => prof.value === user.profession
         )
-        // console.log('newProf', newProfession[0])
 
         if (newProfession[0] !== undefined) {
             user.profession = {
@@ -66,22 +77,54 @@ const EditForm = () => {
             }
         }
 
-        // console.log('user.profession', user.profession)
-
         setUser(user)
-        // console.log('user', user)
 
         if (user) {
             api.users.update(userId, user)
         }
     }
 
+    // (user.qualities.label !== undefined)
+    //     ? (userQualities = {
+    //           label: user.qualities.name,
+    //           value: user.qualities._id,
+    //           color: user.qualities.color
+    //       })
+    //     : user.qualities
+
+    // console.log('if user -> user.qualities', user.qualities)
+
     if (user) {
+        // console.log('edit form if user', user)
+        // user.profession = {
+        //     value: user.profession._id,
+        //     label: user.profession.name
+        // }
+        // const professionsList = Object.keys(user).map((professionName) => ({
+        //     label: user[professionName].name,
+        //     value: user[professionName]._id
+        // }))
+        // setProfession(professionsList)
+
+        // user.init_qualities = user.qualities
         const userQualities = Object.keys(user.qualities).map((optionName) => ({
             label: user.qualities[optionName].name,
             value: user.qualities[optionName]._id,
             color: user.qualities[optionName].color
         }))
+        // const userQualities = {}
+
+        // const userQualities = Object.keys(user.qualities).map((optionName) => ({
+        //     label: user.qualities[optionName].name,
+        //     value: user.qualities[optionName]._id,
+        //     color: user.qualities[optionName].color
+        // }))
+
+        // const userQualities = {
+        //     label: user.qualities.name,
+        //     value: user.qualities._id,
+        //     color: user.qualities.color
+        // }
 
         return (
             <div className="container mt-5">
@@ -108,7 +151,10 @@ const EditForm = () => {
                                 options={professions}
                                 name="profession"
                                 onChange={handleChange}
-                                value={user.profession}
+                                value={user.profession._id}
+                                //     {label: user.profession.name,
+                                //      value: user.profession._id}
+                                // }
                                 // error={errors.profession}
                             />
                             <RadioField
