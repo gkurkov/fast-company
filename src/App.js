@@ -5,7 +5,7 @@ import Users from './layouts/users'
 import NavBar from './components/ui/navBar'
 import Main from './layouts/main'
 import Login from './layouts/login'
-import Edit from './layouts/edit'
+// import Edit from './layouts/edit'
 // import UsersLayout from './components/usersLayout'
 
 function App() {
@@ -14,12 +14,12 @@ function App() {
             <NavBar />
             {/* <Users /> */}
             <Switch>
+                <Route path="/users/:userId?/:edit?" component={Users} />
                 <Route path="/login/:type?" component={Login} />
-                <Route
+                {/* <Route
                     path="/users/:userId/edit"
                     render={(user) => <Edit user={user} />}
-                />
-                <Route path="/users/:userId?" component={Users} />
+                /> */}
                 <Route path="/" exact component={Main} />
                 <Redirect to="/" />
             </Switch>

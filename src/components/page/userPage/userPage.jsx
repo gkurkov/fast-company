@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import api from '../../../api'
 import Qualities from '../../ui/qualities'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const UserPage = ({ userId }) => {
     const [user, setUser] = useState()
@@ -10,10 +10,10 @@ const UserPage = ({ userId }) => {
         api.users.getById(userId).then((data) => setUser(data))
     }, [])
 
-    // const history = useHistory()
-    // const handleClick = () => {
-    //     history.push('/users')
-    // }
+    const history = useHistory()
+    const handleClick = () => {
+         history.push(history.location.pathname + '/edit')
+     }
 
     if (user) {
         return (
@@ -24,10 +24,11 @@ const UserPage = ({ userId }) => {
                 <p>Количество встреч: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
                 {/* <button onClick={handleClick}>Все пользователи</button> */}
+                <button onClick={handleClick}>Изменить</button>
 
-                <a href={userId + '/edit'}>
+                {/* <a href={userId + '/edit'}>
                     <button>Изменить</button>
-                </a>
+                </a> */}
 
                 {/* <Link to="/edit">
                 <button>Изменить</button>
