@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import TextField from '../components/textField'
-import { validator } from '../utils/validator'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import LoginForm from '../components/ui/loginForm'
+import RegisterForm from '../components/ui/registerForm'
 
 const Login = () => {
-    // const [email, setEmail] = useState('')
-    // const handleChange = (e) => {
-    //     setEmail(e.target.value)
-    // }
+    const { type } = useParams()
+    const [formType, setFormType] = useState(
+        type === 'register' ? type : 'login'
+    )
 
+<<<<<<< HEAD
     const [data, setData] = useState({ email: '', password: '' }) // состояние для всей формы сразу, а не отдельных полей
     const [errors, setErrors] = useState({})
 
@@ -64,58 +66,43 @@ const Login = () => {
         const isValid = validate()
         if (!isValid) return
         console.log(data)
+=======
+    const toggleFormType = (params) => {
+        setFormType((prevState) =>
+            prevState === 'register' ? 'login' : 'register'
+        )
+>>>>>>> e57798ce3f957bb071b7db75c849fe1f44ad6f5a
     }
 
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    <h3 className="mb-4">Login</h3>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="Электронная почта"
-                            // type="text" // по умолчанию обозначили в компоненте значение text
-                            name="email"
-                            value={data.email}
-                            onChange={handleChange}
-                            error={errors.email}
-                        />
-                        <TextField
-                            label="Пароль"
-                            type="password"
-                            name="password"
-                            value={data.password}
-                            onChange={handleChange}
-                            error={errors.password}
-                        />
-                        <button
-                            type="submit"
-                            disabled={!isValid}
-                            className="btn btn-primary w-100 mx-auto"
-                        >
-                            Submit
-                        </button>
-                        {/* <div>
-                <label htmlFor="email">Email</label>
-                <input
-                    type="text"
-                    id="email"
-                    name="email"
-                    value={data.email}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label htmlFor="password">Пароль</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="email"
-                    value={data.password}
-                    onChange={handleChange}
-                />
-            </div> */}
-                    </form>
+                    {formType === 'register' ? (
+                        <>
+                                        <h3 className="mb-4">Register</h3>
+                            <RegisterForm />
+                            <p>
+                                Already have account?{''}
+                                <a role="button" onClick={toggleFormType}>
+                                    {' '}
+                                    Sign In
+                                </a>
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h3 className="mb-4">Login</h3>
+                            <LoginForm />
+                            <p>
+                                Dont have account?{' '}
+                                <a role="button" onClick={toggleFormType}>
+                                    {' '}
+                                    Sign Up
+                                </a>
+                            </p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
