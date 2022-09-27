@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { paginate } from '../../../utils/paginate'
-import Pagination from '../../common/pagination'
+import { paginate } from '../utils/paginate'
+import Pagination from './pagination'
 import PropTypes from 'prop-types'
-import GroupList from '../../common/groupList'
-import api from '../../../api'
-import SearchStatus from '../../ui/searchStatus'
-import UserTable from '../../ui/usersTable'
+import GroupList from './groupList'
+import api from '../api'
+import SearchStatus from './searchStatus'
+import UserTable from './usersTable'
 import _ from 'lodash'
 
-const UsersListPage = () => {
+const UsersList = () => {
     const pageSize = 5
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfession] = useState()
-    // const [comments, setComments] = useState()
     const [selectedProf, setSelectedProf] = useState()
-    const [searchQuery, setSearchQuery] = useState('')
+
+    const [searchInput, setSearchInput] = useState('') //
+
+    const [placeholder, setPlaceholder] = useState('Search...')
+
     const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
 
     const [users, setUsers] = useState()
+
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data))
     }, [])
@@ -40,49 +44,38 @@ const UsersListPage = () => {
         api.professions.fetchAll().then((data) => setProfession(data))
     }, [])
 
-    // const [comments, setComments] = useState()
-    // useEffect(() => {
-    //     api.comments.fetchAll().then((data) => setComments(data))
-    // }, [])
-    // localStorage.setItem('comments', JSON.stringify(comments))
-    // console.log('comments 1', comments)
-
     useEffect(() => {
         setCurrentPage(1)
-    }, [selectedProf, searchQuery])
+    }, [selectedProf, searchInput]) //
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
     }
 
     const handleProfessionSelect = (item) => {
-        if (searchQuery !== '') setSearchQuery('')
         setSelectedProf(item)
-    }
-
-    const handleSearchQuery = ({ target }) => {
-        setSelectedProf(undefined)
-        setSearchQuery(target.value)
+        setSearchInput('')
+        setPlaceholder('Search...')
     }
 
     const handleSort = (item) => {
         setSortBy(item)
     }
 
+    const handleSearchChange = ({ target }) => {
+        setSearchInput(target.value)
+        setSelectedProf()
+    }
+
     if (users) {
-        const filteredUsers = searchQuery
-            ? users.filter(
-                  (user) =>
-                      user.name
-                          .toLowerCase()
-                          .indexOf(searchQuery.toLowerCase()) !== -1
-              )
-            : selectedProf
+        const filteredUsers = selectedProf
             ? users.filter(
                   (user) =>
                       JSON.stringify(user.profession) ===
                       JSON.stringify(selectedProf)
               )
+            : searchInput
+            ? users.filter((user) => user.name.includes(searchInput))
             : users
 
         const count = filteredUsers.length
@@ -97,6 +90,8 @@ const UsersListPage = () => {
 
         const clearFilter = () => {
             setSelectedProf()
+            setSearchInput('')
+            setPlaceholder('Search...')
         }
 
         return (
@@ -119,13 +114,18 @@ const UsersListPage = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
-                    <input
-                        type="text"
-                        name="searchQuery"
-                        placeholder="Search..."
-                        onChange={handleSearchQuery}
-                        value={searchQuery}
-                    />
+                    <div className="input-group">
+                        <form>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={placeholder}
+                                value={searchInput}
+                                onChange={handleSearchChange}
+                            />
+                            {/* <button type="submit">Отправить</button> */}
+                        </form>
+                    </div>
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}
@@ -147,11 +147,11 @@ const UsersListPage = () => {
             </div>
         )
     }
-    return <h3>Loading...</h3>
+    return 'loading...'
 }
 
-UsersListPage.propTypes = {
+UsersList.propTypes = {
     users: PropTypes.array
 }
 
-export default UsersListPage
+export default UsersList

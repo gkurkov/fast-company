@@ -35,7 +35,7 @@ const SelectField = ({
                 onChange={handleChange}
             >
                 <option disabled value="">
-                    {'Выберите профессию'}
+                    {defaultOption}
                 </option>
                 {optionsArray.length > 0 &&
                     optionsArray.map((option) => (
