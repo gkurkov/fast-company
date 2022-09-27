@@ -12,12 +12,12 @@ const UsersListPage = () => {
     const pageSize = 5
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfession] = useState()
+    // const [comments, setComments] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const [searchQuery, setSearchQuery] = useState('')
     const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
 
     const [users, setUsers] = useState()
-
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data))
     }, [])
@@ -39,6 +39,13 @@ const UsersListPage = () => {
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data))
     }, [])
+
+    // const [comments, setComments] = useState()
+    // useEffect(() => {
+    //     api.comments.fetchAll().then((data) => setComments(data))
+    // }, [])
+    // localStorage.setItem('comments', JSON.stringify(comments))
+    // console.log('comments 1', comments)
 
     useEffect(() => {
         setCurrentPage(1)
@@ -92,51 +99,53 @@ const UsersListPage = () => {
             setSelectedProf()
         }
 
-        return <div className="d-flex">
-                    {professions && (
-                        <div className="d-flex flex-column flex-shrink-0 p-3">
-                            <GroupList
-                                selectedItem={selectedProf}
-                                items={professions}
-                                onItemSelect={handleProfessionSelect}
-                            />
-                            <button
-                                className="btn btn-secondary mt-2"
-                                onClick={clearFilter}
-                            >
-                                {' '}
-                                Очистить
-                            </button>
-                        </div>
-                    )}
-                    <div className="d-flex flex-column">
-                        <SearchStatus length={count} />
-                        <input
-                            type="text"
-                            name="searchQuery"
-                            placeholder="Search..."
-                            onChange={handleSearchQuery}
-                            value={searchQuery}
+        return (
+            <div className="d-flex">
+                {professions && (
+                    <div className="d-flex flex-column flex-shrink-0 p-3">
+                        <GroupList
+                            selectedItem={selectedProf}
+                            items={professions}
+                            onItemSelect={handleProfessionSelect}
                         />
-                        {count > 0 && (
-                            <UserTable
-                                users={usersCrop}
-                                onSort={handleSort}
-                                selectedSort={sortBy}
-                                onDelete={handleDelete}
-                                onToggleBookMark={handleToggleBookMark}
-                            />
-                        )}
-                        <div className="d-flex justify-content-center">
-                            <Pagination
-                                itemsCount={count}
-                                pageSize={pageSize}
-                                currentPage={currentPage}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            {' '}
+                            Очистить
+                        </button>
+                    </div>
+                )}
+                <div className="d-flex flex-column">
+                    <SearchStatus length={count} />
+                    <input
+                        type="text"
+                        name="searchQuery"
+                        placeholder="Search..."
+                        onChange={handleSearchQuery}
+                        value={searchQuery}
+                    />
+                    {count > 0 && (
+                        <UserTable
+                            users={usersCrop}
+                            onSort={handleSort}
+                            selectedSort={sortBy}
+                            onDelete={handleDelete}
+                            onToggleBookMark={handleToggleBookMark}
+                        />
+                    )}
+                    <div className="d-flex justify-content-center">
+                        <Pagination
+                            itemsCount={count}
+                            pageSize={pageSize}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                        />
                     </div>
                 </div>
+            </div>
+        )
     }
     return <h3>Loading...</h3>
 }
