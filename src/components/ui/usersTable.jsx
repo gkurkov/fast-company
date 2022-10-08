@@ -1,16 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import BookMark from '../common/bookmark'
-import Qualities from './qualities'
+import Qualities from '../ui/qualities'
 import Table from '../common/table'
 import { Link } from 'react-router-dom'
+import Profession from '../../components/ui/professions'
 
 const UserTable = ({
     users,
     onSort,
     selectedSort,
     onToggleBookMark,
-    onDelete
+    onDelete,
+    ...rest
 }) => {
     const columns = {
         name: {
@@ -24,7 +27,10 @@ const UserTable = ({
             name: 'Качества',
             component: (user) => <Qualities qualities={user.qualities} />
         },
-        professions: { path: 'profession.name', name: 'Профессия' },
+        professions: {
+            name: 'Профессия',
+            component: (user) => <Profession id={user.profession} />
+        },
         completedMeetings: {
             path: 'completedMeetings',
             name: 'Встретился, раз'
@@ -51,13 +57,7 @@ const UserTable = ({
             )
         }
     }
-
     return (
-        // <Table>
-        //     <TableHeader {...{ onSort, selectedSort, columns }} />
-        //     <TableBody {...{ columns, data: users }} />
-        // </Table>
-
         <Table
             onSort={onSort}
             selectedSort={selectedSort}
@@ -69,8 +69,8 @@ const UserTable = ({
 
 UserTable.propTypes = {
     users: PropTypes.array.isRequired,
-    selectedSort: PropTypes.object.isRequired,
     onSort: PropTypes.func.isRequired,
+    selectedSort: PropTypes.object.isRequired,
     onToggleBookMark: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired
 }
