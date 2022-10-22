@@ -5,7 +5,12 @@ import userService from '../services/user.service'
 import { toast } from 'react-toastify'
 import { setTokens } from '../services/localStorage.service'
 
-const httpAuth = axios.create()
+const httpAuth = axios.create({
+    baseURL: 'https://identitytoolkit.googleapis.com/v1/',
+    params: {
+        key: process.env.REACT_APP_FIREBASE_KEY
+    }
+})
 const AuthContext = React.createContext()
 
 export const useAuth = () => {
@@ -20,14 +25,16 @@ const AuthProvider = ({ children }) => {
     async function signUp({ email, password, ...rest }) {
         // const keyFireBasePrivate = 'AIzaSyCK_8991obUDate-gF5yGrdK2Mt4oQhncg'
         // const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keyFireBasePrivate}`
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`
-
         try {
-            const { data } = await httpAuth.post(url, {
-                email,
-                password,
-                returnSecureToken: true
-            })
+            const { data } = await httpAuth.post(
+                // `signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`,
+                `accounts:signUp`,
+                {
+                    email,
+                    password,
+                    returnSecureToken: true
+                }
+            )
             setTokens(data)
             await createUser({ _id: data.localId, email, ...rest })
         } catch (error) {
@@ -46,26 +53,39 @@ const AuthProvider = ({ children }) => {
     }
 
     async function logIn({ email, password }) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`
-
         try {
-            const { data } = await httpAuth.post(url, {
-                email,
-                password,
-                returnSecureToken: true
-            })
+            const { data } = await httpAuth.post(
+                // `signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`,
+                `accounts:signInWithPassword`,
+                {
+                    email,
+                    password,
+                    returnSecureToken: true
+                }
+            )
             setTokens(data)
             console.log('logIn data', data)
         } catch (error) {
             errorCatcher(error)
             const { code, message } = error.response.data.error
             if (code === 400) {
-                if (message === 'EMAIL_NOT_FOUND') {
-                    const errorObject = {
-                        email: 'Пользователь с таким email не найден'
-                    }
-                    throw errorObject
+                switch (message) {
+                    case 'INVALID_PASSWORD':
+                        throw new Error('Email или пароль введены не верно')
+
+                    default:
+                        throw new Error(
+                            'Слишком много попыток входа. Попробуйте позже.'
+                        )
                 }
+
+                // if (message === 'INVALID_PASSWORD') {
+                //     throw new Error('Email или пароль введены не верно')
+
+                // const errorObject = {
+                //     email: 'Email или пароль введены не верно'
+                // }
+                // throw errorObject
             }
         }
     }

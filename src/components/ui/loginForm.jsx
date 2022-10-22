@@ -9,15 +9,19 @@ import { useHistory } from 'react-router-dom'
 const LoginForm = () => {
     // console.log(process.env)
     const history = useHistory()
-    const [data, setData] = useState({ email: '', password: '', stayOn: false }) // состояние для всей формы сразу, а не отдельных полей
+
+    // состояние для всей формы сразу, а не отдельных полей
+    const [data, setData] = useState({ email: '', password: '', stayOn: false })
     const [errors, setErrors] = useState({})
     const { logIn } = useAuth()
+    const [enterError, setEnterError] = useState(null)
 
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }))
+        setEnterError(null)
     }
 
     // const validateScheme = yup.object().shape({
@@ -47,22 +51,11 @@ const LoginForm = () => {
         email: {
             isRequired: {
                 message: 'Электронная почта обязательна для заполнения'
-            },
-            isEmail: { message: 'Email введен не корректно' }
+            }
         },
         password: {
             isRequired: {
                 message: 'Пароль обязателен для заполнения'
-            },
-            isCapitalSymbol: {
-                message: 'Пароль должен содержать хотя бы одну заглавную букву'
-            },
-            isContentDigit: {
-                message: 'Пароль должен содержать хотя бы одну цифру'
-            },
-            min: {
-                message: 'Пароль должен содержать минимум 8 символов',
-                value: 8
             }
         }
     }
@@ -94,12 +87,10 @@ const LoginForm = () => {
         const isValid = validate()
         if (!isValid) return
         try {
-            console.log('loginform data', data)
             await logIn(data)
             history.push('/')
         } catch (error) {
-            setErrors(error)
-            console.log(error)
+            setEnterError(error.message)
         }
     }
 
@@ -128,9 +119,10 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {enterError && <p className="text-danger">{enterError}</p>}
             <button
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || enterError}
                 className="btn btn-primary w-100 mx-auto"
             >
                 Submit
