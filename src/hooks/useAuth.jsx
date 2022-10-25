@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import localStorageService, {
     setTokens
 } from '../services/localStorage.service'
+import { useHistory } from 'react-router-dom'
 
 export const httpAuth = axios.create({
     baseURL: 'https://identitytoolkit.googleapis.com/v1/',
@@ -20,11 +21,19 @@ export const useAuth = () => {
 }
 
 const AuthProvider = ({ children }) => {
-    const [currentUser, setUser] = useState({})
+    const [currentUser, setUser] = useState()
     const [error, setError] = useState(null)
+    const [isLoading, setLoading] = useState(true)
+    const history = useHistory()
 
     function randomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    function logOut() {
+        localStorageService.removeAuthData()
+        setUser(null)
+        history.push('/')
     }
 
     function errorCatcher(error) {
@@ -52,6 +61,11 @@ const AuthProvider = ({ children }) => {
                 email,
                 rate: randomInt(1, 5),
                 completedMeetings: randomInt(0, 200),
+                image: `https://avatars.dicebear.com/api/avataaars/${(
+                    Math.random() + 1
+                )
+                    .toString(36)
+                    .substring(7)}.svg`,
                 ...rest
             })
         } catch (error) {
@@ -81,7 +95,7 @@ const AuthProvider = ({ children }) => {
                 }
             )
             setTokens(data)
-            getUserData()
+            await getUserData()
         } catch (error) {
             errorCatcher(error)
             const { code, message } = error.response.data.error
@@ -122,12 +136,16 @@ const AuthProvider = ({ children }) => {
             setUser(content)
         } catch (error) {
             errorCatcher(error)
+        } finally {
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         if (localStorageService.getAccessToken()) {
             getUserData()
+        } else {
+            setLoading(false)
         }
     }, [])
 
@@ -139,8 +157,8 @@ const AuthProvider = ({ children }) => {
     }, [error])
 
     return (
-        <AuthContext.Provider value={{ signUp, currentUser, logIn }}>
-            {children}
+        <AuthContext.Provider value={{ signUp, currentUser, logIn, logOut }}>
+            {!isLoading ? children : 'Loading...'}
         </AuthContext.Provider>
     )
 }

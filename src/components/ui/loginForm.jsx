@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom'
 const LoginForm = () => {
     // console.log(process.env)
     const history = useHistory()
+    console.log(history)
+    // console.log(history.location.state.from.pathname)
 
     // состояние для всей формы сразу, а не отдельных полей
     const [data, setData] = useState({ email: '', password: '', stayOn: false })
@@ -88,7 +90,11 @@ const LoginForm = () => {
         if (!isValid) return
         try {
             await logIn(data)
-            history.push('/')
+            history.push(
+                history.location.state
+                    ? history.location.state.from.pathname
+                    : '/'
+            )
         } catch (error) {
             setEnterError(error.message)
         }
